@@ -1,5 +1,6 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js';
 import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js';
+import { getFirestore, doc, runTransaction, serverTimestamp } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js';
 import { firebaseConfig } from './firebase-config.js';
 
 const ocean = document.getElementById('ocean');
@@ -61,14 +62,45 @@ document.querySelector('[data-action="visit"]').addEventListener('click', () => 
 
 seedParticles();
 
-// ----------------- Firebase 初期化 + 匿名認証（ここからが今回の追加分） -----------------
+// ----- Firebase 初期化 + 匿名認証 + Firestore ユーザー文書初期化 -----
 try {
   const firebaseApp = initializeApp(firebaseConfig);
   const auth = getAuth(firebaseApp);
+  const db = getFirestore(firebaseApp);
 
   signInAnonymously(auth)
     .then((userCredential) => {
-      console.log('Firebase anonymous sign-in success. UID:', userCredential.user.uid);
+      const uid = userCredential.user.uid;
+      console.log('Firebase anonymous sign-in success. UID:', uid);
+
+      // Transaction で users/{uid} を確認し、存在しない場合だけ作成
+      return runTransaction(db, async (transaction) => {
+        const userDocRef = doc(db, 'users', uid);
+        const userDoc = await transaction.get(userDocRef);
+
+        if (!userDoc.exists()) {
+          // 新規作成
+          transaction.set(userDocRef, {
+            uid: uid,
+            createdAt: serverTimestamp(),
+            pairId: null,
+          });
+          return true;
+        }
+
+        // 既存
+        return false;
+      })
+        .then((isNewUser) => {
+          if (isNewUser) {
+            console.log('users doc created. UID:', uid);
+          } else {
+            console.log('users doc already exists. UID:', uid);
+          }
+        })
+        .catch((err) => {
+          console.error('Failed to create or verify users document for UID:', uid, err);
+        });
     })
     .catch((error) => {
       console.error('Firebase anonymous sign-in failed:', error);
@@ -76,4 +108,4 @@ try {
 } catch (err) {
   console.error('Firebase initialization error:', err);
 }
-// ------------------------------------------------------------------------------------
+// -----------------------------------------------------------------------
