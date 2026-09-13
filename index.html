@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#03131b" />
+  <title>Nemu — ふたりの深海の部屋</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <canvas id="seaCanvas" aria-hidden="true"></canvas>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <main id="app" class="app-shell">
+    <section id="gate" class="screen active" aria-label="深海の玄関">
+      <div class="gate-copy">
+        <p class="eyebrow">Nemu</p>
+        <h1>ふたりの深海の部屋</h1>
+        <p class="whisper">ことばを置かずに、気配だけ残す。</p>
+      </div>
+
+      <button id="enterGate" class="sea-gate" aria-label="深海へ入る">
+        <span class="gate-ring ring-one"></span>
+        <span class="gate-ring ring-two"></span>
+        <span class="gate-core"></span>
+      </button>
+      <p class="tap-hint">水面にふれる</p>
+    </section>
+
+    <section id="home" class="screen" aria-label="深海の玄関メニュー">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Nemu</p>
+          <p class="tiny-copy">今日も海は、静かに続いている。</p>
+        </div>
+      </header>
+
+      <div class="home-portal" aria-hidden="true">
+        <span class="portal-glow"></span>
+        <span class="portal-line"></span>
+      </div>
+
+      <div class="home-actions">
+        <button class="glass-button primary" data-room="mine">自分の部屋</button>
+        <button class="glass-button" data-room="partner">相手の部屋へ</button>
+      </div>
+    </section>
+
+    <section id="room" class="screen room-screen" aria-label="深海の部屋">
+      <header class="room-header">
+        <button id="backHome" class="icon-button" aria-label="玄関へ戻る">‹</button>
+        <div class="room-title-wrap">
+          <p id="roomOwner" class="eyebrow">MY DEEP ROOM</p>
+          <p id="roomMood" class="tiny-copy">しずかな潮</p>
+        </div>
+        <button id="soundToggle" class="icon-button muted" aria-label="音の切り替え">♪</button>
+      </header>
+
+      <div id="roomWorld" class="room-world">
+        <div class="light-shaft shaft-a"></div>
+        <div class="light-shaft shaft-b"></div>
+        <div class="sea-floor"></div>
+        <div class="plant plant-a"></div>
+        <div class="plant plant-b"></div>
+        <div class="plant plant-c"></div>
+
+        <div id="fish" class="fish fish-mine" role="img" aria-label="深海魚">
+          <span class="fish-light"></span>
+          <span class="fish-fin fin-top"></span>
+          <span class="fish-body">
+            <span class="fish-eye eye-left"></span>
+            <span class="fish-eye eye-right"></span>
+            <span class="fish-cheek cheek-left"></span>
+            <span class="fish-cheek cheek-right"></span>
+          </span>
+          <span class="fish-tail"></span>
+          <span class="fish-wing wing-left"></span>
+          <span class="fish-wing wing-right"></span>
+        </div>
+
+        <div id="giftLayer" class="gift-layer" aria-live="polite"></div>
+        <div id="rippleLayer" class="ripple-layer" aria-hidden="true"></div>
+
+        <button id="leaveRipple" class="world-tap" aria-label="気配の波紋を残す"></button>
+      </div>
+
+      <footer class="room-footer">
+        <p id="visitHint" class="visit-hint">触れると、波紋だけが残ります。</p>
+        <button id="giftButton" class="gift-button">そっと置く</button>
+      </footer>
+    </section>
+  </main>
+
+  <div id="giftSheet" class="sheet" aria-hidden="true">
+    <button id="sheetBackdrop" class="sheet-backdrop" aria-label="閉じる"></button>
+    <div class="sheet-panel" role="dialog" aria-modal="true" aria-label="差し入れを選ぶ">
+      <div class="sheet-handle"></div>
+      <p class="eyebrow">A SMALL GIFT</p>
+      <h2>言葉の代わりに、ひとつ。</h2>
+      <div class="gift-options">
+        <button class="gift-option" data-gift="flower">
+          <span class="gift-icon flower-icon">✣</span>
+          <span><strong>深海の花</strong><small>ここにいるよ</small></span>
+        </button>
+        <button class="gift-option" data-gift="jelly">
+          <span class="gift-icon jelly-icon">◌</span>
+          <span><strong>眠りクラゲ</strong><small>ゆっくりしてね</small></span>
+        </button>
+        <button class="gift-option" data-gift="tone">
+          <span class="gift-icon tone-icon">◉</span>
+          <span><strong>音の波紋</strong><small>気配だけ残す</small></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
