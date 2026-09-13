@@ -1,3 +1,7 @@
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js';
+import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js';
+import { firebaseConfig } from './firebase-config.js';
+
 const ocean = document.getElementById('ocean');
 const particleLayer = document.getElementById('particles');
 const rippleLayer = document.getElementById('ripples');
@@ -56,3 +60,20 @@ document.querySelector('[data-action="visit"]').addEventListener('click', () => 
 });
 
 seedParticles();
+
+// ----------------- Firebase 初期化 + 匿名認証（ここからが今回の追加分） -----------------
+try {
+  const firebaseApp = initializeApp(firebaseConfig);
+  const auth = getAuth(firebaseApp);
+
+  signInAnonymously(auth)
+    .then((userCredential) => {
+      console.log('Firebase anonymous sign-in success. UID:', userCredential.user.uid);
+    })
+    .catch((error) => {
+      console.error('Firebase anonymous sign-in failed:', error);
+    });
+} catch (err) {
+  console.error('Firebase initialization error:', err);
+}
+// ------------------------------------------------------------------------------------
