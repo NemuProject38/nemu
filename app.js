@@ -62,7 +62,7 @@ document.querySelector('[data-action="visit"]').addEventListener('click', () => 
 
 seedParticles();
 
-// ----- Firebase 初期化 + 匿名認証 + Firestore ユーザー文書初期化 -----
+// ----- Firebase 初期化 + 匿名認証 + Firestore ユーザー文書初期化 + rooms文書初期化 -----
 try {
   const firebaseApp = initializeApp(firebaseConfig);
   const auth = getAuth(firebaseApp);
@@ -97,6 +97,35 @@ try {
           } else {
             console.log('users doc already exists. UID:', uid);
           }
+          
+          // users transaction 成功後、rooms/{uid} transaction を開始
+          return runTransaction(db, async (transaction) => {
+            const roomDocRef = doc(db, 'rooms', uid);
+            const roomDoc = await transaction.get(roomDocRef);
+
+            if (!roomDoc.exists()) {
+              // 新規作成：3フィールドのみ
+              transaction.set(roomDocRef, {
+                ownerUid: uid,
+                createdAt: serverTimestamp(),
+                pairId: null,
+              });
+              return true;
+            }
+
+            // 既存 room を上書きしない
+            return false;
+          })
+            .then((isNewRoom) => {
+              if (isNewRoom) {
+                console.log('rooms doc created. UID:', uid);
+              } else {
+                console.log('rooms doc already exists. UID:', uid);
+              }
+            })
+            .catch((err) => {
+              console.error('Failed to create or verify rooms document for UID:', uid, err);
+            });
         })
         .catch((err) => {
           console.error('Failed to create or verify users document for UID:', uid, err);
