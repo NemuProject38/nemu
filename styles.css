@@ -22,7 +22,7 @@ button { font: inherit; }
 .room-image {
   position:absolute;
   inset:-4%;
-  background-image:url("nemu-room.png");
+  background-image:url("nemu-room-bg.PNG");
   background-size:cover;
   background-position:50% 50%;
   filter:saturate(.94) contrast(1.02) brightness(.86);
@@ -84,6 +84,18 @@ button { font: inherit; }
     radial-gradient(circle at 75% 65%, rgba(194,133,255,.06), transparent 25%),
     linear-gradient(180deg, transparent 55%, rgba(1,8,15,.12));
   animation:mistDrift 19s ease-in-out infinite alternate;
+}
+
+.fish {
+  position:absolute;
+  left:50%;
+  top:55%;
+  transform:translate(-50%, -50%);
+  width:clamp(80px, 28vw, 220px);
+  height:auto;
+  object-fit:contain;
+  z-index:3;
+  pointer-events:none;
 }
 
 .brand {
@@ -203,7 +215,7 @@ button { font: inherit; }
 @keyframes mistDrift { from{transform:translate3d(-1%,0,0);opacity:.6} to{transform:translate3d(2%,-1%,0);opacity:1} }
 @keyframes floatUp { 0%{transform:translate3d(0,12vh,0) scale(.55);opacity:0} 12%{opacity:var(--alpha)} 70%{opacity:var(--alpha)} 100%{transform:translate3d(var(--drift),-108vh,0) scale(1.1);opacity:0} }
 @keyframes rippleOut { 0%{transform:scale(.35);opacity:.9} 75%{opacity:.28} 100%{transform:scale(15);opacity:0;border-width:.5px} }
-@keyframes giftBloom { 0%{transform:translate(-50%,10px) scale(.2);opacity:0} 20%{opacity:1} 50%{transform:translate(-50%,-4px) scale(1)} 100%{transform:translate(-50%,-12px) scale(.92);opacity:.8} }
+@keyframes giftBloom { 0%{transform:translate(-50%,10px) scale(.2);opacity:0} 20%{opacity:1} 50%{transform:translate(-50%,-4px) scale(1)} 100%{transform:translate(-50%,-12px) scale(.92);opacity:0} }
 
 @media (max-aspect-ratio: 3/5) {
   .room-image { background-position:50% 47%; }
